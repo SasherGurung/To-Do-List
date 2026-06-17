@@ -121,18 +121,16 @@ export default function Page() {
               </TableRow>
             </TableHeader>
 
-            <TableBody >
+            <TableBody>
               {Tasks.map((task) => (
                 <TableRow key={task.taskId} className="space-y-5 items-center">
                   <TableCell className="font-medium">{task.taskId}</TableCell>
 
-                  <TableCell >{task.date}</TableCell>
+                  <TableCell>{task.date}</TableCell>
 
                   <TableCell>{task.title}</TableCell>
 
-                  <TableCell>
-                    {task.description}
-                  </TableCell>
+                  <TableCell>{task.description}</TableCell>
 
                   <TableCell>{task.priority}</TableCell>
 
