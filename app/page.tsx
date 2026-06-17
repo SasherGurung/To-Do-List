@@ -95,7 +95,7 @@ export default function Page() {
             </Breadcrumb>
           </div>
         </header>
-        <section className="flex flex-1 flex-col gap-4 p-4 pt-0 min-h-screen mx-10">
+        <section className="flex flex-1 flex-col gap-4 p-4 min-h-screen mx-10">
           <div className="flex justify-between items-center m-5">
             <h1 className="text-3xl font-bold">Task Overview</h1>
             <Button size="lg" className="p-5 text-base cursor-pointer">
