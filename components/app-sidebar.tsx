@@ -53,11 +53,6 @@ const data = {
           url: "/overview",
           icon: <TbBrandGoogleAnalytics />,
         },
-        {
-          title: "Productivity",
-          url: "#",
-          icon: <IoAnalytics />
-        },
       ],
     },
   ],
