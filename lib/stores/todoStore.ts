@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export type Task = {
-  id: number;
+  id: string;
   title: string;
   description: string;
   priority: "High" | "Medium" | "Low";
@@ -18,11 +18,11 @@ type ToDoStore = {
 
   addTask: (task: Omit<Task, "id" | "createdAt" | "updatedAt">) => void;
 
-  deleteTask: (id: number) => void;
+  deleteTask: (id: string) => void;
 
-  updateTask: (id: number, updatedTask: Partial<Task>) => void;
+  updateTask: (id: string, updatedTask: Partial<Task>) => void;
 
-  changeStatus: (id: number, status: Task["status"]) => void;
+  changeStatus: (id: string, status: Task["status"]) => void;
 
   clearTasks: () => void;
 };
@@ -33,7 +33,7 @@ const store = (set: any, get: any): ToDoStore => ({
   addTask: (task) => {
     const newTask: Task = {
       ...task,
-      id: Date.now(),
+      id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
