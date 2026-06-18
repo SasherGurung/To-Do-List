@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export type Task = {
   id: number;
@@ -83,6 +84,10 @@ const store = (set: any, get: any): ToDoStore => ({
   },
 });
 
-const useToDoStore = create<ToDoStore>();
+const useToDoStore = create<ToDoStore>()(
+  persist(store, {
+    name: "to-do-store",
+  }),
+);
 
 export default useToDoStore;
