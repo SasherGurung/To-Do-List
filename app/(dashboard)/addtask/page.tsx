@@ -43,8 +43,15 @@ function AddTaskPage() {
   const [date, setDate] = React.useState<Date>();
 
   const handleCreateTask = () => {
-    if (!addTask) {
-      toast.error("Please fill required fields");
+    if (
+      !title.trim() ||
+      !description.trim() ||
+      !priority ||
+      !category ||
+      !status ||
+      !date
+    ) {
+      toast.error("Please fill all required fields");
       return;
     }
 
@@ -121,8 +128,8 @@ function AddTaskPage() {
                 onValueChange={(value) =>
                   setCategory(
                     value as
-                      | "Work"
                       | "Personal"
+                      | "Work"
                       | "Study"
                       | "Health"
                       | "Shopping"
@@ -159,7 +166,7 @@ function AddTaskPage() {
               <Select
                 value={status}
                 onValueChange={(value) =>
-                  setStatus(value as "Completed" | "In Progress" | "Pending")
+                  setStatus(value as "Pending" | "In Progress" | "Completed")
                 }
               >
                 <SelectTrigger className="w-full max-w-48">
@@ -167,9 +174,10 @@ function AddTaskPage() {
                 </SelectTrigger>
                 <SelectContent position="popper" side="bottom">
                   <SelectGroup>
-                    <SelectItem value="Completed">Completed</SelectItem>
-                    <SelectItem value="In Progress">In Progress</SelectItem>
                     <SelectItem value="Pending">Pending</SelectItem>
+                    <SelectItem value="In Progress">In Progress</SelectItem>
+
+                    <SelectItem value="Completed">Completed</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
