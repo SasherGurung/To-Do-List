@@ -22,9 +22,50 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useToDoStore from "@/lib/stores/todoStore";
+import { toast } from "react-hot-toast";
 
 function AddTaskPage() {
+  const addTask = useToDoStore((state) => state.addTask);
+
+  const [title, setTitle] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [priority, setPriority] = React.useState<"High" | "Medium" | "Low">(
+    "High",
+  );
+  const [category, setCategory] = React.useState<
+    "Work" | "Personal" | "Study" | "Health" | "Shopping" | "Finance"
+  >("Personal");
+  const [status, setStatus] = React.useState<
+    "Completed" | "In Progress" | "Pending"
+  >("Pending");
+
   const [date, setDate] = React.useState<Date>();
+
+  const handleCreateTask = () => {
+    if (!addTask) {
+      toast.error("Please fill required fields");
+      return;
+    }
+
+    addTask({
+      title,
+      description,
+      priority,
+      category,
+      status,
+      dueDate: date?.toISOString() || "",
+    });
+
+    setTitle("");
+    setDescription("");
+    setPriority("Medium");
+    setCategory("Work");
+    setStatus("Pending");
+    setDate(undefined);
+
+    toast.success("Task created successfully!");
+  };
   return (
     <section className="min-h-screen m-15">
       <h1 className="text-4xl font-bold text-center m-5">New Entry</h1>
@@ -32,44 +73,80 @@ function AddTaskPage() {
         <div className="w-2xl space-y-6 rounded-xl border p-6 shadow-sm">
           <div className="space-y-2">
             <label className="text-md font-medium">Title</label>
-            <Input className="text-base" placeholder="Enter task title" />
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="text-base"
+              placeholder="Enter task title"
+            />
           </div>
 
           <div className="space-y-2">
             <label className="text-md font-medium">Description</label>
-            <Textarea className="h-32" placeholder="Enter task description" />
+            <Textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="h-32"
+              placeholder="Enter task description"
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-md font-medium">Priority</label>
-              <Select>
+              <Select
+                value={priority}
+                onValueChange={(value) =>
+                  setPriority(value as "High" | "Medium" | "Low")
+                }
+              >
                 <SelectTrigger className="w-full max-w-48">
                   <SelectValue placeholder="Select Priority" />
                 </SelectTrigger>
+
                 <SelectContent position="popper" side="bottom">
-                  <SelectGroup>
-                    <SelectLabel>Priority</SelectLabel>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="low">Low</SelectItem>
-                  </SelectGroup>
+                  <SelectItem value="High">High</SelectItem>
+
+                  <SelectItem value="Medium">Medium</SelectItem>
+
+                  <SelectItem value="Low">Low</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
               <label className="text-md font-medium">Category</label>
-              <Select>
+              <Select
+                value={category}
+                onValueChange={(value) =>
+                  setCategory(
+                    value as
+                      | "Work"
+                      | "Personal"
+                      | "Study"
+                      | "Health"
+                      | "Shopping"
+                      | "Finance",
+                  )
+                }
+              >
                 <SelectTrigger className="w-full max-w-48">
                   <SelectValue placeholder="Select Category" />
                 </SelectTrigger>
                 <SelectContent position="popper" side="bottom">
                   <SelectGroup>
                     <SelectLabel>Category</SelectLabel>
-                    <SelectItem value="work">Work</SelectItem>
-                    <SelectItem value="personal">Personal</SelectItem>
-                    <SelectItem value="study">Study</SelectItem>
+                    <SelectItem value="Personal">Personal</SelectItem>
+
+                    <SelectItem value="Work">Work</SelectItem>
+
+                    <SelectItem value="Study">Study</SelectItem>
+
+                    <SelectItem value="Health">Health</SelectItem>
+
+                    <SelectItem value="Shopping">Shopping</SelectItem>
+
+                    <SelectItem value="Finance">Finance</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -79,15 +156,20 @@ function AddTaskPage() {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Status</label>
-              <Select>
+              <Select
+                value={status}
+                onValueChange={(value) =>
+                  setStatus(value as "Completed" | "In Progress" | "Pending")
+                }
+              >
                 <SelectTrigger className="w-full max-w-48">
                   <SelectValue placeholder="Select Status" />
                 </SelectTrigger>
                 <SelectContent position="popper" side="bottom">
                   <SelectGroup>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="in-progress">In Progress</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="Completed">Completed</SelectItem>
+                    <SelectItem value="In Progress">In Progress</SelectItem>
+                    <SelectItem value="Pending">Pending</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -113,13 +195,18 @@ function AddTaskPage() {
                     selected={date}
                     onSelect={setDate}
                     defaultMonth={date}
+                    disabled={(date) => date < new Date()}
                   />
                 </PopoverContent>
               </Popover>
             </div>
           </div>
 
-          <Button className="w-full cursor-pointer" size="lg">
+          <Button
+            onClick={handleCreateTask}
+            className="w-full cursor-pointer"
+            size="lg"
+          >
             Create Task
           </Button>
         </div>

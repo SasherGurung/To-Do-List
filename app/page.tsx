@@ -139,8 +139,15 @@ export default function Page() {
                   <TableCell>{task.status}</TableCell>
 
                   <TableCell className="text-right space-x-2">
-                    <Button
+                  <Button
                       variant="outline"
+                      size="sm"
+                      className="cursor-pointer"
+                    >
+                      Preview
+                    </Button>
+                    <Button
+                      variant="lime"
                       size="sm"
                       className="cursor-pointer"
                     >

@@ -29,7 +29,7 @@ type ToDoStore = {
   clearTasks: () => void;
 };
 
-const store = (set: any, get: any): ToDoStore => ({
+const store = (set): ToDoStore => ({
   tasks: [],
   // Add Task
   addTask: (task) => {

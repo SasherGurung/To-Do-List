@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { sourceSans } from "./fonts"
+import { sourceSans } from "./fonts";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "To Do List",
@@ -19,9 +20,12 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${sourceSans.className} h-full antialiased`}
     >
-      <TooltipProvider>
-        <body className="min-h-full flex flex-col">{children}</body>
-      </TooltipProvider>
+      <body className="min-h-full flex flex-col">
+        <TooltipProvider>
+          <Toaster position="top-center" />
+          {children}
+        </TooltipProvider>
+      </body>
     </html>
   );
 }
