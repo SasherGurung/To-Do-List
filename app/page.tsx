@@ -31,10 +31,12 @@ import {
 import useToDoStore from "@/lib/stores/todoStore";
 import { useRouter } from "next/navigation";
 import { format, isToday, isTomorrow } from "date-fns";
+import { toast } from "react-hot-toast";
 
 export default function Page() {
   const router = useRouter();
   const tasks = useToDoStore((state) => state.tasks);
+  const deleteTask = useToDoStore((state) => state.deleteTask);
 
   const formatDueDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -42,13 +44,12 @@ export default function Page() {
     if (isToday(date)) {
       return "Today";
     }
-
     if (isTomorrow(date)) {
       return "Tomorrow";
     }
-
     return format(date, "EEE, MMM dd");
   };
+  
 
   return (
     <SidebarProvider>
@@ -83,9 +84,7 @@ export default function Page() {
           <Table className="border-separate border-spacing-y-3 border-spacing-x-5">
             <TableHeader>
               <TableRow>
-                <TableHead className="text-lg font-bold ">
-                  Created At
-                </TableHead>
+                <TableHead className="text-lg font-bold ">Created At</TableHead>
                 <TableHead className="text-lg font-bold">Due Date</TableHead>
                 <TableHead className="text-lg font-bold">Title</TableHead>
                 <TableHead className="text-lg font-bold">Priority</TableHead>
@@ -127,6 +126,10 @@ export default function Page() {
                     </Button>
 
                     <Button
+                    onClick={() => {
+                      deleteTask(task.id)
+                      toast.success("Task deleted successfully")
+                    }}
                       variant="destructive"
                       size="sm"
                       className="cursor-pointer"
