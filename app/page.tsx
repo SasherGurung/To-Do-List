@@ -1,3 +1,5 @@
+"use client";
+
 import { AppSidebar } from "@/components/app-sidebar";
 import { Button } from "@/components/ui/button";
 import { Breadcrumb, BreadcrumbList } from "@/components/ui/breadcrumb";
@@ -26,57 +28,28 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import Link from "next/link";
-
-const Tasks = [
-  {
-    taskId: "TASK001",
-    date: "2026-06-17",
-    title: "Complete Todo UI",
-    description: "Build the dashboard table using Shadcn components",
-    priority: "High",
-    category: "Work",
-    status: "In Progress",
-  },
-  {
-    taskId: "TASK002",
-    date: "2026-06-18",
-    title: "Learn Zustand",
-    description: "Create Zustand store for managing tasks",
-    priority: "Medium",
-    category: "Study",
-    status: "Pending",
-  },
-  {
-    taskId: "TASK003",
-    date: "2026-06-19",
-    title: "Gym Workout",
-    description: "Complete chest and shoulder workout",
-    priority: "Low",
-    category: "Personal",
-    status: "Completed",
-  },
-  {
-    taskId: "TASK004",
-    date: "2026-06-20",
-    title: "Build Authentication",
-    description: "Implement login and protected routes",
-    priority: "High",
-    category: "Work",
-    status: "Pending",
-  },
-  {
-    taskId: "TASK005",
-    date: "2026-06-21",
-    title: "Read Documentation",
-    description: "Study Next.js and React documentation",
-    priority: "Medium",
-    category: "Study",
-    status: "In Progress",
-  },
-];
+import useToDoStore from "@/lib/stores/todoStore";
+import { useRouter } from "next/navigation";
+import { format, isToday, isTomorrow } from "date-fns";
 
 export default function Page() {
+  const router = useRouter();
+  const tasks = useToDoStore((state) => state.tasks);
+
+  const formatDueDate = (dateString: string) => {
+    const date = new Date(dateString);
+
+    if (isToday(date)) {
+      return "Today";
+    }
+
+    if (isTomorrow(date)) {
+      return "Tomorrow";
+    }
+
+    return format(date, "EEE, MMM dd");
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -98,39 +71,42 @@ export default function Page() {
         <section className="flex flex-1 flex-col gap-4 p-4 min-h-screen mx-10">
           <div className="flex justify-between items-center m-5">
             <h1 className="text-3xl font-bold">Task Overview</h1>
-            <Button size="lg" className="p-5 text-base cursor-pointer">
-              <Link href="/addtask">Add-Task</Link>
+            <Button
+              size="lg"
+              className="p-5 text-base cursor-pointer"
+              onClick={() => router.push("/addtask")}
+            >
+              Add-Task
             </Button>
           </div>
 
-          <Table className="border-separate border-spacing-y-3">
+          <Table className="border-separate border-spacing-y-3 border-spacing-x-5">
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[100px] text-lg font-bold">
-                  Task Id
+                <TableHead className="text-lg font-bold ">
+                  Created At
                 </TableHead>
-                <TableHead className="text-lg font-bold">Date</TableHead>
+                <TableHead className="text-lg font-bold">Due Date</TableHead>
                 <TableHead className="text-lg font-bold">Title</TableHead>
-                <TableHead className="text-lg font-bold">Description</TableHead>
                 <TableHead className="text-lg font-bold">Priority</TableHead>
                 <TableHead className="text-lg font-bold">Category</TableHead>
                 <TableHead className="text-lg font-bold">Status</TableHead>
-                <TableHead className="text-center text-lg font-bold">
+                <TableHead className="text-center text-lg font-bold w-[100px]">
                   Action
                 </TableHead>
               </TableRow>
             </TableHeader>
 
             <TableBody>
-              {Tasks.map((task) => (
-                <TableRow key={task.taskId} className="space-y-5 items-center">
-                  <TableCell className="font-medium">{task.taskId}</TableCell>
+              {tasks.map((task) => (
+                <TableRow key={task.id} className="items-center w-full">
+                  <TableCell className="font-semibold">
+                    {format(new Date(task.createdAt), "MMM dd Y")}
+                  </TableCell>
 
-                  <TableCell>{task.date}</TableCell>
+                  <TableCell>{formatDueDate(task.dueDate)}</TableCell>
 
                   <TableCell>{task.title}</TableCell>
-
-                  <TableCell>{task.description}</TableCell>
 
                   <TableCell>{task.priority}</TableCell>
 
@@ -138,19 +114,15 @@ export default function Page() {
 
                   <TableCell>{task.status}</TableCell>
 
-                  <TableCell className="text-right space-x-2">
-                  <Button
+                  <TableCell className="text-center space-x-2">
+                    <Button
                       variant="outline"
                       size="sm"
                       className="cursor-pointer"
                     >
                       Preview
                     </Button>
-                    <Button
-                      variant="lime"
-                      size="sm"
-                      className="cursor-pointer"
-                    >
+                    <Button variant="lime" size="sm" className="cursor-pointer">
                       Edit
                     </Button>
 
