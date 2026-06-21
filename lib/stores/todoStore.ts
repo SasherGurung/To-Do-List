@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 // Task Type
-type Task = {
+export type Task = {
   id: string;
   title: string;
   description: string;
@@ -29,7 +29,7 @@ type ToDoStore = {
   clearTasks: () => void;
 };
 
-const store = (set): ToDoStore => ({
+const store = (set: any): ToDoStore => ({
   tasks: [],
   // Add Task
   addTask: (task) => {

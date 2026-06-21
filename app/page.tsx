@@ -27,7 +27,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import useToDoStore from "@/lib/stores/todoStore";
+import useToDoStore, { Task } from "@/lib/stores/todoStore";
 import { useRouter } from "next/navigation";
 import { format, isToday, isTomorrow } from "date-fns";
 import { toast } from "react-hot-toast";
