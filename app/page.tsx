@@ -49,6 +49,14 @@ export default function Page() {
   const deleteTask = useToDoStore((state) => state.deleteTask);
   const [dialogTrigger, setDialogTrigger] = useState<Task | null>(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemPerPage = 7;
+  const totalPage = Math.ceil(tasks.length / itemPerPage);
+  const startIndex = (currentPage - 1) * itemPerPage;
+  const endIndex = startIndex + itemPerPage;
+
+  const paginatedTask = tasks.slice(startIndex, endIndex);
+
   const formatDueDate = (dateString: string) => {
     const date = new Date(dateString);
 
@@ -139,7 +147,7 @@ export default function Page() {
             </TableHeader>
 
             <TableBody>
-              {tasks.map((task) => (
+              {paginatedTask.map((task) => (
                 <TableRow key={task.id} className="items-center w-full">
                   <TableCell className="font-semibold">
                     {format(new Date(task.createdAt), "MMM dd Y")}
@@ -149,7 +157,9 @@ export default function Page() {
 
                   <TableCell>{task.title}</TableCell>
 
-                  <TableCell className={`${getPriority(task.priority)}`}>{task.priority}</TableCell>
+                  <TableCell className={`${getPriority(task.priority)}`}>
+                    {task.priority}
+                  </TableCell>
 
                   <TableCell>{task.category}</TableCell>
 
@@ -314,28 +324,37 @@ export default function Page() {
               ))}
             </TableBody>
           </Table>
-          <div>
+          <div className="m-3">
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious href="#" />
+                  <PaginationPrevious
+                    href="#"
+                    onClick={() =>
+                      currentPage > 1 && setCurrentPage(currentPage - 1)
+                    }
+                  />
                 </PaginationItem>
+
+                {Array.from({ length: totalPage }, (_, index) => (
+                  <PaginationItem key={index}>
+                    <PaginationLink
+                      href="#"
+                      isActive={currentPage === index + 1}
+                      onClick={() => setCurrentPage(index + 1)}
+                    >
+                      {index + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+
                 <PaginationItem>
-                  <PaginationLink href="#">1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#" isActive>
-                    2
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">3</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href="#" />
+                  <PaginationNext
+                    href="#"
+                    onClick={() =>
+                      currentPage < totalPage && setCurrentPage(currentPage + 1)
+                    }
+                  />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
