@@ -32,11 +32,22 @@ import useToDoStore from "@/lib/stores/todoStore";
 import { useRouter } from "next/navigation";
 import { format, isToday, isTomorrow } from "date-fns";
 import { toast } from "react-hot-toast";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useState } from "react";
 
 export default function Page() {
   const router = useRouter();
   const tasks = useToDoStore((state) => state.tasks);
   const deleteTask = useToDoStore((state) => state.deleteTask);
+  const [dialogTrigger, setDialogTrigger] = useState<Task | null>(null);
 
   const formatDueDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -49,7 +60,6 @@ export default function Page() {
     }
     return format(date, "EEE, MMM dd");
   };
-  
 
   return (
     <SidebarProvider>
@@ -81,7 +91,7 @@ export default function Page() {
             </Button>
           </div>
 
-          <Table className="border-separate border-spacing-y-3 border-spacing-x-5">
+          <Table className="border-separate border-spacing-y-3">
             <TableHeader>
               <TableRow>
                 <TableHead className="text-lg font-bold ">Created At</TableHead>
@@ -115,21 +125,124 @@ export default function Page() {
 
                   <TableCell className="text-center space-x-2">
                     <Button
+                      onClick={() => setDialogTrigger(task)}
                       variant="outline"
                       size="sm"
                       className="cursor-pointer"
                     >
                       Preview
                     </Button>
+                    <Dialog
+                      open={!!dialogTrigger}
+                      onOpenChange={(open) => !open && setDialogTrigger(null)}
+                    >
+                      <DialogContent className="max-w-3xl rounded-2xl p-6">
+                        <DialogHeader>
+                          <DialogTitle className="text-2xl font-bold text-center">
+                            Task Overview
+                          </DialogTitle>
+                        </DialogHeader>
+
+                        <DialogDescription asChild>
+                          <div className="space-y-6 mt-4">
+                            {/* Title */}
+                            <div className="space-y-1">
+                              <p className="text-2xl font-bold text-muted-foreground">
+                                Title
+                              </p>
+                              <h1 className="text-lg font-semibold text-foreground">
+                                {task.title}
+                              </h1>
+                            </div>
+
+                            {/* Main Content */}
+                            <div className="grid grid-cols-1 md:grid-cols-[70%_30%] gap-3">
+                              {/* Description */}
+                              <div className="rounded-xl bg-muted/40 p-4 space-y-2">
+                                <h2 className="font-bold text-base">
+                                  Description
+                                </h2>
+                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                  {task.description ||
+                                    "No description provided"}
+                                </p>
+                              </div>
+
+                              {/* Details */}
+                              <div className="rounded-xl border p-4 space-y-3">
+                                <div>
+                                  <p className="text-base font-bold text-muted-foreground">
+                                    Due Date
+                                  </p>
+                                  <p className="font-medium">{task.dueDate}</p>
+                                </div>
+
+                                <div>
+                                  <p className="text-base font-bold text-muted-foreground">
+                                    Category
+                                  </p>
+                                  <p className="font-medium">{task.category}</p>
+                                </div>
+
+                                <div>
+                                  <p className="text-base font-bold text-muted-foreground">
+                                    Priority
+                                  </p>
+                                  <span className="inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-600">
+                                    {task.priority}
+                                  </span>
+                                </div>
+
+                                <div>
+                                  <p className="text-base font-bold text-muted-foreground">
+                                    Status
+                                  </p>
+                                  <span className="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-600">
+                                    {task.status}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Metadata */}
+                            <div className="flex justify-around rounded-xl bg-muted/40 p-4 text-sm">
+                              <div>
+                                <p className="text-md text-muted-foreground font-bold">
+                                  Created At
+                                </p>
+                                <p className="font-medium">{format(new Date(task.createdAt), "MMM dd Y")}</p>
+                              </div>
+
+                              <div>
+                                <p className="text-md text-muted-foreground font-bold">
+                                  Updated At
+                                </p>
+                                <p className="font-medium">{format(new Date(task.updatedAt), "MMM dd Y")}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </DialogDescription>
+
+                        <DialogFooter className="mt-6">
+                          <DialogClose asChild>
+                            <Button variant="outline" className="rounded-lg p-4 cursor-pointer">
+                              Back
+                            </Button>
+                          </DialogClose>
+
+                          <Button variant="lime" className="rounded-lg p-4 cursor-pointer">Edit</Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                     <Button variant="lime" size="sm" className="cursor-pointer">
                       Edit
                     </Button>
 
                     <Button
-                    onClick={() => {
-                      deleteTask(task.id)
-                      toast.success("Task deleted successfully")
-                    }}
+                      onClick={() => {
+                        deleteTask(task.id);
+                        toast.success("Task deleted successfully");
+                      }}
                       variant="destructive"
                       size="sm"
                       className="cursor-pointer"
