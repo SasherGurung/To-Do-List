@@ -43,18 +43,6 @@ const data = {
         },
       ],
     },
-    {
-      title: "Analytics",
-      url: "/",
-      icon: <GrAnalytics />      ,
-      items: [
-        {
-          title: "Overview",
-          url: "/overview",
-          icon: <TbBrandGoogleAnalytics />,
-        },
-      ],
-    },
   ],
 };
 
