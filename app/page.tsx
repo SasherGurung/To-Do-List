@@ -61,6 +61,38 @@ export default function Page() {
     return format(date, "EEE, MMM dd");
   };
 
+  const getStatus = (status: string) => {
+    switch (status) {
+      case "Completed":
+        return "text-green-600 font-semibold";
+
+      case "In Progress":
+        return "text-yellow-500 font-semibold";
+
+      case "Pending":
+        return "text-red-600 font-semibold";
+
+      default:
+        return "text-gray-600 font-semibold";
+    }
+  };
+
+  const getPriority = (priority: string) => {
+    switch (priority) {
+      case "High":
+        return "text-red-600 font-semibold";
+
+      case "Medium":
+        return "text-yellow-500 font-semibold";
+
+      case "Low":
+        return "text-green-600 font-semibold";
+
+      default:
+        return "text-gray-600 font-semibold";
+    }
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -117,11 +149,13 @@ export default function Page() {
 
                   <TableCell>{task.title}</TableCell>
 
-                  <TableCell>{task.priority}</TableCell>
+                  <TableCell className={`${getPriority(task.priority)}`}>{task.priority}</TableCell>
 
                   <TableCell>{task.category}</TableCell>
 
-                  <TableCell>{task.status}</TableCell>
+                  <TableCell className={`${getStatus(task.status)}`}>
+                    <p>{task.status}</p>
+                  </TableCell>
 
                   <TableCell className="text-center space-x-2">
                     <Button
