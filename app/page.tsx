@@ -138,50 +138,55 @@ export default function Page() {
                     >
                       <DialogContent className="max-w-3xl rounded-2xl p-6">
                         <DialogHeader>
-                          <DialogTitle className="text-2xl font-bold text-center">
+                          <DialogTitle className="text-3xl font-bold text-center">
                             Task Overview
                           </DialogTitle>
                         </DialogHeader>
 
                         <DialogDescription asChild>
                           <div className="space-y-6 mt-4">
-                            {/* Title */}
                             <div className="space-y-1">
-                              <p className="text-2xl font-bold text-muted-foreground">
+                              <p className="text-xl font-bold text-muted-foreground">
                                 Title
                               </p>
                               <h1 className="text-lg font-semibold text-foreground">
-                                {task.title}
+                                {dialogTrigger?.title}
                               </h1>
                             </div>
 
-                            {/* Main Content */}
                             <div className="grid grid-cols-1 md:grid-cols-[70%_30%] gap-3">
-                              {/* Description */}
                               <div className="rounded-xl bg-muted/40 p-4 space-y-2">
                                 <h2 className="font-bold text-base">
                                   Description
                                 </h2>
                                 <p className="text-sm text-muted-foreground leading-relaxed">
-                                  {task.description ||
+                                  {dialogTrigger?.description ||
                                     "No description provided"}
                                 </p>
                               </div>
 
-                              {/* Details */}
                               <div className="rounded-xl border p-4 space-y-3">
                                 <div>
                                   <p className="text-base font-bold text-muted-foreground">
                                     Due Date
                                   </p>
-                                  <p className="font-medium">{task.dueDate}</p>
+                                  <p className="font-medium">
+                                    {dialogTrigger?.dueDate
+                                      ? format(
+                                          new Date(dialogTrigger.dueDate),
+                                          "MMM dd, yyyy",
+                                        )
+                                      : "-"}
+                                  </p>
                                 </div>
 
                                 <div>
                                   <p className="text-base font-bold text-muted-foreground">
                                     Category
                                   </p>
-                                  <p className="font-medium">{task.category}</p>
+                                  <p className="font-medium">
+                                    {dialogTrigger?.category}
+                                  </p>
                                 </div>
 
                                 <div>
@@ -189,7 +194,7 @@ export default function Page() {
                                     Priority
                                   </p>
                                   <span className="inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-600">
-                                    {task.priority}
+                                    {dialogTrigger?.priority}
                                   </span>
                                 </div>
 
@@ -198,26 +203,39 @@ export default function Page() {
                                     Status
                                   </p>
                                   <span className="inline-flex rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-600">
-                                    {task.status}
+                                    {dialogTrigger?.status}
                                   </span>
                                 </div>
                               </div>
                             </div>
 
-                            {/* Metadata */}
                             <div className="flex justify-around rounded-xl bg-muted/40 p-4 text-sm">
                               <div>
                                 <p className="text-md text-muted-foreground font-bold">
                                   Created At
                                 </p>
-                                <p className="font-medium">{format(new Date(task.createdAt), "MMM dd Y")}</p>
+                                <p className="font-medium">
+                                  {dialogTrigger?.createdAt
+                                    ? format(
+                                        new Date(dialogTrigger.createdAt),
+                                        "MMM dd yyyy",
+                                      )
+                                    : "-"}
+                                </p>
                               </div>
 
                               <div>
                                 <p className="text-md text-muted-foreground font-bold">
                                   Updated At
                                 </p>
-                                <p className="font-medium">{format(new Date(task.updatedAt), "MMM dd Y")}</p>
+                                <p className="font-medium">
+                                  {dialogTrigger?.createdAt
+                                    ? format(
+                                        new Date(dialogTrigger.updatedAt),
+                                        "MMM dd yyyy",
+                                      )
+                                    : "-"}
+                                </p>
                               </div>
                             </div>
                           </div>
@@ -225,12 +243,20 @@ export default function Page() {
 
                         <DialogFooter className="mt-6">
                           <DialogClose asChild>
-                            <Button variant="outline" className="rounded-lg p-4 cursor-pointer">
+                            <Button
+                              variant="outline"
+                              className="rounded-lg p-4 cursor-pointer"
+                            >
                               Back
                             </Button>
                           </DialogClose>
 
-                          <Button variant="lime" className="rounded-lg p-4 cursor-pointer">Edit</Button>
+                          <Button
+                            variant="lime"
+                            className="rounded-lg p-4 cursor-pointer"
+                          >
+                            Edit
+                          </Button>
                         </DialogFooter>
                       </DialogContent>
                     </Dialog>
